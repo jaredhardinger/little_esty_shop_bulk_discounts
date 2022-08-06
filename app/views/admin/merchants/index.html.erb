@@ -14,7 +14,6 @@
   <%= link_to 'Create Merchant', new_admin_merchant_path %>
   <div class="row">
     <p class='mr-auto col-sm-5'>Top Merchants</p>
-    <p class='ml-auto col-sm-5'>Enabled Merchants</p>
   </div>
   <ul class='mr-auto col-sm-4'>
     <% @merchants.top_merchants.each do |m| %>
@@ -29,6 +28,7 @@
     <% end %>
   </ul>
 
+    <p class='ml-auto col-sm-5'>Enabled Merchants</p>
   <ul class='ml-auto col-sm-4'>
     <% @enabled_merchants.each do |m| %>
       <section id="merchant-<%= m.id %>">

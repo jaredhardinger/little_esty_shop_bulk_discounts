@@ -61,7 +61,6 @@ RSpec.describe 'invoices show' do
     @transaction8 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_8.id)
     @transaction1a = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_1a.id)
 
-
     @discount1 = BulkDiscount.create!(name: "20% off 3+ items", pct_discount: 20, qty_threshold: 3, merchant_id: @merchant1.id)
     @discount2 = BulkDiscount.create!(name: "30% off 5+ items", pct_discount: 30, qty_threshold: 5, merchant_id: @merchant1.id)
     @discount3 = BulkDiscount.create!(name: "15% off 20+ items", pct_discount: 15, qty_threshold: 20, merchant_id: @merchant1.id)
@@ -122,7 +121,6 @@ RSpec.describe 'invoices show' do
 
   it "Next to each invoice item I see a link to the show page for the bulk discount that was applied (if any)" do
     visit merchant_invoice_path(@merchant1, @invoice_1a)
-    save_and_open_page
     within("#row-#{@ii_1a.id}") do
       expect(page).to have_content("None")
     end

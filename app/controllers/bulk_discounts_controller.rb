@@ -1,6 +1,6 @@
 class BulkDiscountsController < ApplicationController
-    before_action :find_merchant, only: [:index, :show, :new, :create, :destroy]
-    before_action :find_discount, only: [:show, :destroy]
+    before_action :find_merchant
+    before_action :find_discount, only: [:show, :destroy, :edit, :update]
 
     def index 
     end
@@ -18,13 +18,26 @@ class BulkDiscountsController < ApplicationController
             flash.notice = "Discount has been successfully created"
         else
             redirect_to "/merchant/#{@merchant.id}/bulk_discounts/new"
-            flash[:alert] = "Error: #{error_message(new_discount.errors)}"
+            flash[:alert] = "You screwed something up. Try again."
         end 
     end
 
     def destroy
         @discount.destroy
         redirect_to request.referrer
+    end
+
+    def edit
+    end
+
+    def update
+        if @discount.update(discount_params)
+            redirect_to "/merchant/#{@merchant.id}/bulk_discounts/#{@discount.id}"
+            flash.notice = "Discount has been successfully updated"
+        else
+            redirect_to request.referrer
+            flash[:alert] = "You screwed something up. Try again."
+        end 
     end
 
 private

@@ -17,11 +17,13 @@
   </div>
 
     <ul class='mr-auto col-sm-4'>
+      <p><%= link_to "Create New Discount", "/merchant/#{@merchant.id}/bulk_discounts/new" %></p>
+
     <% @merchant.bulk_discounts.each do |discount| %>
       <section id="discount-<%= discount.id %>">
           <li><%= link_to "#{discount.name}", "/merchant/#{@merchant.id}/bulk_discounts/#{discount.id}" %>
-          <li>Discount: <%= discount.pct_discount %>%
-          <li>Quantity Threshold: <%= discount.qty_threshold %>
+          <br>Discount: <%= discount.pct_discount %>%
+          <br>Quantity Threshold: <%= discount.qty_threshold %>
       </section>
     <% end %>
   </ul>

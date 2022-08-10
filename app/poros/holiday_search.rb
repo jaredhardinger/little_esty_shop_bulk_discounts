@@ -1,4 +1,3 @@
-require 'pry'
 require 'httparty'
 require './app/poros/holiday'
 require './app/services/holiday_service'

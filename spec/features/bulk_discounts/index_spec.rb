@@ -79,6 +79,31 @@ RSpec.describe 'merchant discount index' do
     expect(find('form')).to have_content('Quantity Threshold')
   end
 
+  it 'reloads the bulk_discounts/new page and flashes an alert if something is awry' do      
+    #Sad paths
+    click_link("Create New Discount")
+    fill_in "Percent Discount", with: 101
+    fill_in "Quantity Threshold", with: 62
+    fill_in "Name", with: "101% off with 62+ items"
+    click_button "Save"
+    expect(current_path).to eq("/merchant/#{@merchant1.id}/bulk_discounts/new")
+    expect(page).to have_content("You screwed something up. Try again.")
+    
+    fill_in "Name", with: "10% off with 62+ items"
+    fill_in "Percent Discount", with: 10
+    fill_in "Quantity Threshold", with: -62
+    click_button "Save"
+    expect(current_path).to eq("/merchant/#{@merchant1.id}/bulk_discounts/new")
+    expect(page).to have_content("You screwed something up. Try again.")
+    
+    fill_in "Name", with: ""
+    fill_in "Percent Discount", with: 10
+    fill_in "Quantity Threshold", with: 62
+    click_button "Save"
+    expect(current_path).to eq("/merchant/#{@merchant1.id}/bulk_discounts/new")
+    expect(page).to have_content("You screwed something up. Try again.")
+  end
+
   it 'when I fill in the form with valid data
   then I am redirected back to the bulk discount index
   and I see my new bulk discount listed' do
@@ -88,6 +113,7 @@ RSpec.describe 'merchant discount index' do
     fill_in "Quantity Threshold", with: 62
     click_button "Save"
     expect(current_path).to eq("/merchant/#{@merchant1.id}/bulk_discounts")
+    expect(page).to have_content("Discount has been successfully created")
     expect(page).to have_content("50% off 62+ Items")
     expect(page).to have_content("Discount: 50%")
     expect(page).to have_content("Quantity Threshold: 62")
@@ -113,6 +139,5 @@ RSpec.describe 'merchant discount index' do
   it "has a section with a header of 'Upcoming Holidays'
   and in this section the name and date of the next 3 upcoming US holidays are listed" do
     expect(page).to have_content("Upcoming Holidays")
-    save_and_open_page
   end
 end

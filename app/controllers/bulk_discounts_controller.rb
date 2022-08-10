@@ -1,6 +1,6 @@
 class BulkDiscountsController < ApplicationController
-    before_action :find_merchant, only: [:index, :show, :new, :create]
-    before_action :find_discount, only: [:show]
+    before_action :find_merchant, only: [:index, :show, :new, :create, :destroy]
+    before_action :find_discount, only: [:show, :destroy]
 
     def index 
     end
@@ -20,6 +20,11 @@ class BulkDiscountsController < ApplicationController
             redirect_to "/merchant/#{@merchant.id}/bulk_discounts/new"
             flash[:alert] = "Error: #{error_message(new_discount.errors)}"
         end 
+    end
+
+    def destroy
+        @discount.destroy
+        redirect_to request.referrer
     end
 
 private

@@ -24,6 +24,9 @@
           <li><%= link_to "#{discount.name}", "/merchant/#{@merchant.id}/bulk_discounts/#{discount.id}" %>
           <br>Discount: <%= discount.pct_discount %>%
           <br>Quantity Threshold: <%= discount.qty_threshold %>
+          <br><%= button_to "Delete Discount", "/merchant/#{@merchant.id}/bulk_discounts/#{discount.id}", method: :delete, 
+                  :onclick => "return confirm('Are you sure you want to delete this discount?')" %>
+          <br>
       </section>
     <% end %>
   </ul>

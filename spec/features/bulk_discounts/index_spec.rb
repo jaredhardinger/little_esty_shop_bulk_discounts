@@ -109,4 +109,10 @@ RSpec.describe 'merchant discount index' do
     expect(page).to_not have_content("Discount: #{@discount3.pct_discount}%")
     expect(page).to_not have_content("Quantity Threshold: #{@discount3.qty_threshold}")
   end
+
+  it "has a section with a header of 'Upcoming Holidays'
+  and in this section the name and date of the next 3 upcoming US holidays are listed" do
+    expect(page).to have_content("Upcoming Holidays")
+    save_and_open_page
+  end
 end

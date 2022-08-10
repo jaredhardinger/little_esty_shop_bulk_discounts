@@ -31,4 +31,13 @@
     <% end %>
   </ul>
 
+  <div class="row">
+    <p class='mr-auto col-sm-5'>Upcoming Holidays</p>
+      <ul>
+      <% @holidays.each do |holiday| %>
+        <li><%= holiday.name%> - <%= holiday.date.to_date.strftime("%A, %B %_d, %Y") %>
+      <% end %>
+      </ul>
+  </div>
+
 </body>

@@ -1,8 +1,10 @@
+require './app/poros/holiday_search'
 class BulkDiscountsController < ApplicationController
     before_action :find_merchant
     before_action :find_discount, only: [:show, :destroy, :edit, :update]
 
     def index 
+        @holidays = HolidaySearch.new.next_three_holidays
     end
 
     def show

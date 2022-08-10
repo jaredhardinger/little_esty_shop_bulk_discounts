@@ -29,8 +29,16 @@ RSpec.describe 'invoices show' do
     @invoice_5 = Invoice.create!(customer_id: @customer_4.id, status: 2)
     @invoice_6 = Invoice.create!(customer_id: @customer_5.id, status: 2)
     @invoice_7 = Invoice.create!(customer_id: @customer_6.id, status: 2)
-
     @invoice_8 = Invoice.create!(customer_id: @customer_6.id, status: 1)
+
+    @invoice_1a = Invoice.create!(customer_id: @customer_2.id, status: 2)
+    @invoice_1b = Invoice.create!(customer_id: @customer_2.id, status: 2)
+    @ii_1a = InvoiceItem.create!(invoice_id: @invoice_1a.id, item_id: @item_1.id, quantity: 1, unit_price: 10, status: 2)
+    @ii_1b = InvoiceItem.create!(invoice_id: @invoice_1a.id, item_id: @item_2.id, quantity: 2, unit_price: 10, status: 2)
+    @ii_1c = InvoiceItem.create!(invoice_id: @invoice_1a.id, item_id: @item_3.id, quantity: 2, unit_price: 10, status: 2)
+    @ii_1d = InvoiceItem.create!(invoice_id: @invoice_1a.id, item_id: @item_4.id, quantity: 4, unit_price: 10, status: 2)
+    @ii_1e = InvoiceItem.create!(invoice_id: @invoice_1a.id, item_id: @item_7.id, quantity: 9, unit_price: 10, status: 2)
+    @ii_1f = InvoiceItem.create!(invoice_id: @invoice_1a.id, item_id: @item_8.id, quantity: 22, unit_price: 10, status: 2)
 
     @ii_1 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 9, unit_price: 10, status: 2)
     @ii_2 = InvoiceItem.create!(invoice_id: @invoice_2.id, item_id: @item_1.id, quantity: 1, unit_price: 10, status: 2)
@@ -51,11 +59,16 @@ RSpec.describe 'invoices show' do
     @transaction6 = Transaction.create!(credit_card_number: 879799, result: 0, invoice_id: @invoice_6.id)
     @transaction7 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_7.id)
     @transaction8 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_8.id)
+    @transaction1a = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_1a.id)
+
+
+    @discount1 = BulkDiscount.create!(name: "20% off 3+ items", pct_discount: 20, qty_threshold: 3, merchant_id: @merchant1.id)
+    @discount2 = BulkDiscount.create!(name: "30% off 5+ items", pct_discount: 30, qty_threshold: 5, merchant_id: @merchant1.id)
+    @discount3 = BulkDiscount.create!(name: "15% off 20+ items", pct_discount: 15, qty_threshold: 20, merchant_id: @merchant1.id)
   end
 
   it "shows the invoice information" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
-
     expect(page).to have_content(@invoice_1.id)
     expect(page).to have_content(@invoice_1.status)
     expect(page).to have_content(@invoice_1.created_at.strftime("%A, %B %-d, %Y"))
@@ -63,7 +76,6 @@ RSpec.describe 'invoices show' do
 
   it "shows the customer information" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
-
     expect(page).to have_content(@customer_1.first_name)
     expect(page).to have_content(@customer_1.last_name)
     expect(page).to_not have_content(@customer_2.last_name)
@@ -71,7 +83,6 @@ RSpec.describe 'invoices show' do
 
   it "shows the item information" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
-
     expect(page).to have_content(@item_1.name)
     expect(page).to have_content(@ii_1.quantity)
     expect(page).to have_content(@ii_1.unit_price)
@@ -81,13 +92,11 @@ RSpec.describe 'invoices show' do
 
   it "shows the total revenue for this invoice" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
-
     expect(page).to have_content(@invoice_1.total_revenue)
   end
 
   it "shows a select field to update the invoice status" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
-
     within("#the-status-#{@ii_1.id}") do
       page.select("cancelled")
       click_button "Update Invoice"
@@ -100,4 +109,14 @@ RSpec.describe 'invoices show' do
      end
   end
 
+  it "shows total revenue and also shows total discounted revenue from this invoice 
+  which includes bulk discounts in the calculation" do
+  visit merchant_invoice_path(@merchant1, @invoice_1a)
+    within("#total-revenue") do
+      expect(page).to have_content("Total Revenue: $400.00")
+    end
+    within("#total-discounted-revenue") do
+      expect(page).to have_content("Total Discounted Revenue: $299.00")
+    end
+  end
 end
